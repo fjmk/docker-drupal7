@@ -1,0 +1,49 @@
+#!/bin/bash
+
+set -e
+
+chmod 1777 /tmp
+
+# chown directories and files that might be coming from volumes
+# chown -R mysql:mysql /var/lib/mysql
+find . -type d -name sites -exec chown -R www-data {}/default/files\; \;
+find . -type d -name sites -exec chown -R www-data {}/default/_private_files\; \;
+
+# initialize files when first run
+if [ ! -f /opt/done ]; then
+  # setup sshd
+  mkdir /var/run/sshd
+  echo 'root:docker' | chpasswd
+  sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+  # SSH login fix. Otherwise user is kicked off after login
+  sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+
+  # Setup Apache2.
+  # listen on port 80 AND port 8080.
+  sed -i 's/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
+  # set the docroot depending on your drupal development application, ex: /var/www, var/www/docroot
+  sed -i 's@DocumentRoot /var\www/html@DocumentRoot /var/www/build@' /etc/apache2/sites-available/000-default.conf
+  echo "Listen 8080" >> /etc/apache2/ports.conf
+  sed -i 's/VirtualHost \*:80/VirtualHost \*:\*/' /etc/apache2/sites-available/000-default.conf
+
+# setup /root/.ssh when /opt/.ssh exists
+  if [ -d /opt/.ssh ]; then
+    cp -R /opt/.ssh /root/
+    chown -R root:root /root/.ssh
+  fi
+
+  # don't check remote ssh hosts
+  mkdir -p /root/.ssh; chmod 700 /root/.ssh
+  cat << EOF > /root/.ssh/config
+Host *
+  StrictHostKeyChecking no
+  UserKnownHostsFile /dev/null
+  LogLevel QUIET
+EOF
+
+# set /opt/done
+touch /opt/done
+fi
+
+echo "Starting Supervisor.  You can safely CTRL-C and the container will continue to run with or without the -d (daemon) option"
+/usr/bin/supervisord -c /etc/supervisor/conf.d/drupal.conf >> /dev/null
