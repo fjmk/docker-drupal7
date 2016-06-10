@@ -28,15 +28,6 @@ if [ ! -f /opt/done ]; then
   a2ensite 000-default
   ln -sf /dev/stdout /var/log/apache2/access.log && ln -sf /dev/stderr /var/log/apache2/error.log
   
-# setup /root/.ssh when /opt/.ssh exists
-  if [ -d /opt/.ssh ]; then
-    cp -R /opt/.ssh /root/
-    chown -R root:root /root/.ssh
-  fi
-
-  # don't check remote ssh hosts
-  mkdir -p /root/.ssh; chmod 700 /root/.ssh
-  cat << EOF > /root/.ssh/config
 Host *
   StrictHostKeyChecking no
   UserKnownHostsFile /dev/null

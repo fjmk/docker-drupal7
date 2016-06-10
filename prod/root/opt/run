@@ -26,15 +26,6 @@ if [ ! -f /opt/done ]; then
   echo "Listen 8080" >> /etc/apache2/ports.conf
   sed -i 's/VirtualHost \*:80/VirtualHost \*:\*/' /etc/apache2/sites-available/000-default.conf
 
-# setup /root/.ssh when /opt/.ssh exists
-  if [ -d /opt/.ssh ]; then
-    cp -R /opt/.ssh /root/
-    chown -R root:root /root/.ssh
-  fi
-
-  # don't check remote ssh hosts
-  mkdir -p /root/.ssh; chmod 700 /root/.ssh
-  cat << EOF > /root/.ssh/config
 Host *
   StrictHostKeyChecking no
   UserKnownHostsFile /dev/null
