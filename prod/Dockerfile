@@ -25,8 +25,8 @@ RUN apt-get update -y && apt-get install -y \
     php5-curl \
     php5-cli \
     php5-mysql \
-    openssh-server \
     mysql-client \
+    openssh-server \
     supervisor
 
 # Install Composer.
@@ -47,6 +47,8 @@ RUN echo "export VISIBLE=now" >> /etc/profile
 ADD root/ /
 
 RUN chmod u+x /opt/supervisor/*_supervisor /opt/run
+
+WORKDIR /var/www
 
 EXPOSE 22 80 8080
 CMD ["/opt/run"]
