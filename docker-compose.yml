@@ -15,7 +15,7 @@ services:
       
   web:
     hostname: web
-    image: fjmk/drupal-dev
+    image: fjmk/docker-drupal7:devel
     environment:
       - MY_USER=frans                           # change to your user
       - UID_USER=1000
