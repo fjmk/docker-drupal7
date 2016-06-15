@@ -1,4 +1,4 @@
-FROM fjmk/drupal-lamp
+FROM fjmk/docker-drupal7:prod
 MAINTAINER Frans Kuipers <info@osconsultant.nl>
 
 ENV DOCROOT=docroot
