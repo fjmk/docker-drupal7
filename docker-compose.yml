@@ -15,15 +15,12 @@ services:
       
   web:
     hostname: web
-    image: fjmk/drupal-dev
+    image: fjmk/drupal-lamp
     environment:
-      - MY_USER=frans                           # change to your user
-      - UID_USER=1000
       - DOCROOT=docroot                         # change to your drupal root (html, build)
     volumes:
       # Project root folder mapping
       - &project_root ".:/var/www"
-      - "~/.ssh:/home/frans/.ssh:ro"                # change to your user
     links:
       - db
     networks:
