@@ -15,7 +15,7 @@ services:
       
   web:
     hostname: web
-    image: fjmk/drupal-lamp
+    image: fjmk/docker-drupal:prod
     environment:
       - DOCROOT=docroot                         # change to your drupal root (html, build)
     volumes:
