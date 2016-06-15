@@ -1,4 +1,4 @@
-FROM fjmk/drupal-ci
+FROM fjmk/docker-drupal7:ci
 MAINTAINER Frans Kuipers <info@osconsultant.nl>
 
 ENV MY_USER=frans
