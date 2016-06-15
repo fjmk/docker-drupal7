@@ -1,0 +1,27 @@
+#!/bin/bash
+
+set -e
+
+chmod 1777 /tmp
+
+# initialize files when first run
+if [ ! -f /opt/done ]; then
+  # Setup Apache2.
+  sed -i 's/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
+  
+  # set the docroot depending on your drupal development application, ex: /var/www, var/www/docroot
+  # default docroot: /var/www/html
+  if [ "x$DOCROOT" != "x" ]; then
+    sed -i "s@DocumentRoot /var/www/html@DocumentRoot /var/www/$DOCROOT@" /etc/apache2/sites-available/000-default.conf
+    sed -i "s@DocumentRoot /var/www/html@DocumentRoot /var/www/$DOCROOT@" /etc/apache2/apache2.conf
+  fi
+
+  a2ensite 000-default
+  ln -sf /dev/stdout /var/log/apache2/access.log && ln -sf /dev/stderr /var/log/apache2/error.log
+  
+# set /opt/done
+touch /opt/done
+fi
+
+echo "Starting Supervisor.  You can safely CTRL-C and the container will continue to run with or without the -d (daemon) option"
+/usr/bin/supervisord -c /etc/supervisor/conf.d/drupal.conf >> /dev/null
