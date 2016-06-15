@@ -4,15 +4,16 @@ MAINTAINER Frans Kuipers <info@osconsultant.nl>
 
 # Setup environment.
 ENV DEBIAN_FRONTEND noninteractive
+ENV TERM=xterm
 
 RUN a2enmod rewrite
 
 # Drupal stuff.
 RUN apt-get update -y && apt-get upgrade -y \
-        && apt-get install -y libpng12-dev libjpeg-dev libpq-dev \
+        && apt-get install -y libpng12-dev libjpeg-dev libpq-dev nano vim\
 	&& rm -rf /var/lib/apt/lists/* \
 	&& docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr \
-	&& docker-php-ext-install gd mbstring zip pdo pdo_mysql pdo_pgsql zip
+	&& docker-php-ext-install gd mbstring zip pdo pdo_mysql pdo_pgsql zip opcache
 
 # Installation.
 RUN apt-get update -y && apt-get install -y \
@@ -26,7 +27,7 @@ RUN apt-get update -y && apt-get install -y \
     php5-cli \
     php5-mysql \
     mysql-client \
-    openssh-server \
+    openssh-client \
     supervisor
 
 # Install Composer.
@@ -50,7 +51,7 @@ RUN chmod u+x /opt/supervisor/*_supervisor /opt/run
 
 WORKDIR /var/www
 
-EXPOSE 22 80 8080
+EXPOSE 22 80
 CMD ["/opt/run"]
 
 
