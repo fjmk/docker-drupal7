@@ -6,16 +6,14 @@ services:
 # Web node
   resolvable:
     hostname: resolvable
-    image: mgood/resolvable
+    image: fjmk/resolvable
     volumes:
       - "/var/run/docker.sock:/tmp/docker.sock"
       - "/etc/resolv.conf:/tmp/resolv.conf"
-    networks:
-      - app_net
       
   web:
     hostname: web
-    image: fjmk/docker-drupal7:prod
+    image: fjmk/docker-drupal:prod
     environment:
       - DOCROOT=docroot                         # change to your drupal root (html, build)
     volumes:
@@ -23,8 +21,6 @@ services:
       - &project_root ".:/var/www"
     links:
       - db
-    networks:
-      - app_net
     depends_on:
       - "resolvable"
       - "db"
@@ -38,8 +34,6 @@ services:
       - MYSQL_USER=drupal
       - MYSQL_PASSWORD=123
       - MYSQL_DATABASE=drupal
-    networks:
-      - app_net
     depends_on:
       - "resolvable"
   
@@ -52,16 +46,5 @@ services:
       - "4444"
     environment:
       - DOMAIN_NAME=selenium.browser
-    networks:
-      - app_net
     depends_on:
       - "resolvable"
-
-networks:
-  app_net:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-      - subnet: 172.16.0.0/24
-        gateway: 172.16.0.1
