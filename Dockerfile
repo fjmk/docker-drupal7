@@ -6,7 +6,7 @@ ENV UID_USER=1000
 ENV DOCROOT=docroot
 ENV TERM=xterm
 
-RUN apt-get update -y && apt-get -y install openssh-server \
+RUN apt-get update -y && apt-get -y install openssh-server ssmtp \
     && apt-get clean \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
