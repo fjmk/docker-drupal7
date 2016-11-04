@@ -6,7 +6,7 @@ ENV TERM=xterm
 
 RUN curl -sL https://deb.nodesource.com/setup | bash -
 
-RUN apt-get -y install nodejs libfontconfig1 bzip2 \
+RUN apt-get -y install nodejs libfontconfig1 bzip2 ssh-agent \
     && apt-get clean \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
