@@ -4,9 +4,12 @@ MAINTAINER Frans Kuipers <info@osconsultant.nl>
 ENV DOCROOT=docroot
 ENV TERM=xterm
 
-RUN curl -sL https://deb.nodesource.com/setup | bash -
-
-RUN apt-get -y install nodejs libfontconfig1 bzip2 ssh-agent \
+RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - \
+    && echo "deb http://ftp.us.debian.org/debian jessie main contrib non-free" | tee -a /etc/apt/sources.list \
+    && echo "deb http://security.debian.org/ jessie/updates contrib non-free" | tee -a /etc/apt/sources.list \
+    && apt-get update \
+    && apt-get -y install nodejs libfontconfig1 bzip2 openssh-client ruby ruby-dev libfreetype6 libfontconfig1 imagemagick \
+    && apt-get -y install ttf-freefont ttf-mscorefonts-installer ttf-bitstream-vera ttf-dejavu ttf-liberation \
     && apt-get clean \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -25,10 +28,13 @@ RUN cd /opt \
     && chmod +x /opt/codespell/bin/codespell.py \
     && ln -s /opt/codespell/bin/codespell.py /usr/local/bin/codespell \
     && ln -s /opt/pareviewsh/pareview.sh /usr/local/bin/ \
-    && curl -L https://www.npmjs.com/install.sh | sh \
+    && curl -L https://npmjs.org/install.sh | sh \
     && npm install -g eslint \
-    && npm install -g phantomjs-prebuilt \
-    && npm install -g pa11y
+    && npm install -g phantomjs-prebuilt casperjs@1.1.1 \
+    && npm install -g pa11y \
+    && gem install wraith --no-rdoc --no-ri \
+    && gem install aws-sdk --no-rdoc --no-ri \
+    && echo "export phantomjs=/usr/bin/phantomjs" > .bashrc
 
 # patch pareview.sh see https://www.drupal.org/node/2320623
 RUN cd /opt/drupalsecure/ \
