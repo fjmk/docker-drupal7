@@ -13,7 +13,7 @@ RUN apt-get update -y && apt-get -y install openssh-server ssmtp \
     && pecl install uploadprogress xdebug
 
 # create docker user
-RUN useradd -u $UID_USER -U -s /bin/bash -G www-data -m $MY_USER
+RUN useradd -u $UID_USER -U -s /bin/bash -G www-data -p RANDOMpasswd -m $MY_USER
 
 COPY root/ /
 
