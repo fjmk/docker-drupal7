@@ -30,11 +30,11 @@ RUN cd /opt \
     && ln -s /opt/pareviewsh/pareview.sh /usr/local/bin/ \
     && curl -L https://npmjs.org/install.sh | sh \
     && npm install -g eslint \
-    && npm install -g phantomjs-prebuilt casperjs@1.1.1 \
+    && npm install -g phantomjs@2.1.7 casperjs@1.1.1 \
     && npm install -g pa11y \
     && gem install wraith --no-rdoc --no-ri \
     && gem install aws-sdk --no-rdoc --no-ri \
-    && echo "export phantomjs=/usr/bin/phantomjs" > .bashrc
+    && cd; echo "export phantomjs=/usr/bin/phantomjs" > .bashrc
 
 # patch pareview.sh see https://www.drupal.org/node/2320623
 RUN cd /opt/drupalsecure/ \
